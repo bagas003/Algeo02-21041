@@ -37,68 +37,44 @@ def writeImage(arr, name):
     cv2.imwrite(name, arr.T)
 
 def getEigenfaces(dataset, v):
-    ui = [numpy.dot(numpy.transpose(dataset), v[0])]
+    ui = [numpy.dot(numpy.transpose(dataset), v[:,0])]
     for i in range(1,len(v)):
-        ui += [numpy.dot(numpy.transpose(dataset), v[i])]
+        ui += [numpy.absolute(numpy.dot(numpy.transpose(dataset), v[:,i]))]
     return numpy.matrix(ui)
 
+def getOmega(eigenFaces, subtractedArr):
+    omega = []
+    for eface in eigenFaces:
+        omega += [numpy.dot(eface, subtractedArr)]
+    return numpy.array(omega).flatten()
 
-dataset = getDataset(r"..\test\dataset")
+def getOmegaSet(eigenfaces, subtracted):
+    omegas = []
+    for sub in subtracted:
+        omegas += [getOmega(eigenfaces, sub)]
+    return numpy.matrix(omegas)
+
+def getEuclidean(omegaSet, omegaNew):
+    euclidean = []
+    for omega in omegaSet:
+        euclidean.append(numpy.linalg.norm(omegaNew - omega))
+    return euclidean
+
+
+dataset = getDataset(r'..\test\dataset')
 mean = getMean(dataset)
 subtracted = getDifference(dataset, mean)
 covarian = getCovarian(subtracted)
-evalues, evector = numpy.linalg.eigh(covarian)
-efaces = getEigenfaces(subtracted, evector)
+evalues, evectors = numpy.linalg.eigh(covarian)
+efaces = getEigenfaces(subtracted, evectors)
+omegaset = getOmegaSet(efaces, subtracted)
 
+testface = cv2.imread(r'..\test\testface1.jpg', cv2.IMREAD_GRAYSCALE)
+testface = numpy.array(testface.T).flatten()
+subtracted_test = numpy.subtract(testface, mean)
 
-for i in range(len(efaces)):
-    writeImage(efaces[i], fr"../test/eigenfaces/{i}.jpg")
+omega = getOmega(efaces, subtracted_test)
 
+euclidean = getEuclidean(omegaset, omega)
 
-
-"""print(evalue)
-print(evector)
-print('--'*25)
-print('--'*25)
-eigenfaces = getEigenfaces(evector)
-print(eigenfaces[8])
-print(len(covarian))
-print(len(covarian[0]))"""
-
-
-"""dataset = [
-    [ 1,-2, 1,-3],
-    [ 1, 3,-1, 2],
-    [ 2, 1,-2, 3],
-    [ 1, 2, 2, 1]
-]
-mean = getMean(dataset)
-print(mean)
-subtracted = getDifference(dataset, mean)
-print(subtracted)
-covarian = getCovarian(subtracted)
-print(covarian)
-evalue, evector = numpy.linalg.eigh(covarian)
-print(evalue)
-print(evector)
-print(mean)
-reconstruct0 = reconstruct(subtracted[0], evector, mean)
-print(reconstruct0)
-print('--'*25)
-eigenfaces = getEigenfaces(evector)
-print(eigenfaces)"""
-
-
-"""img = cv2.imread("tes1.jpg", cv2.IMREAD_GRAYSCALE)
-print(img)
-img1 = numpy.array(img).flatten()
-print(img1)
-img2 = numpy.array(img.T).flatten()
-print(img2)
-
-cv2.imwrite("tes99.jpg", numpy.reshape(img1, (256,256)))
-cv2.imwrite("tes98.jpg", numpy.reshape(img2, (256,256)))"""
-
-
-
-
+print("Paling mirip tuh gambar no ", numpy.argmin(euclidean))
