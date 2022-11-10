@@ -60,21 +60,49 @@ def getEuclidean(omegaSet, omegaNew):
         euclidean.append(numpy.linalg.norm(omegaNew - omega))
     return euclidean
 
+def getFileName(foldername, index):
+    for filename in os.listdir(foldername):
+        if index == 0:
+            return filename
+        index -= 1
 
-dataset = getDataset(r'..\test\dataset')
+datasetfolder = input('enter dataset folder: (ex. newdataset)\n>> ')
+testfacefile = input('enter testface file: (ex. test.jpg)\n>> ')
+
+print('\nextracting dataset...', end=' ')
+datasetfolder = r'..\test\\' + datasetfolder
+dataset = getDataset(datasetfolder)
+print('done!')
+print('getting average face & subtracting faces...', end=' ')
 mean = getMean(dataset)
 subtracted = getDifference(dataset, mean)
+print('done!')
+print('processing covarian matrix...', end=' ')
 covarian = getCovarian(subtracted)
 evalues, evectors = numpy.linalg.eigh(covarian)
+print('done!')
+print('getting eigenfaces and omegas...', end=' ')
 efaces = getEigenfaces(subtracted, evectors)
 omegaset = getOmegaSet(efaces, subtracted)
+print('done!')
 
-testface = cv2.imread(r'..\test\testface1.jpg', cv2.IMREAD_GRAYSCALE)
+print('\nprocessing testface...', end=' ')
+testface = cv2.imread(r'..\test\\' + testfacefile, cv2.IMREAD_GRAYSCALE)
+testface = cv2.resize(testface, (256, 256))
 testface = numpy.array(testface.T).flatten()
 subtracted_test = numpy.subtract(testface, mean)
+print('done!')
 
+print('getting new omega...', end=' ')
 omega = getOmega(efaces, subtracted_test)
-
+print('done!')
+print('getting euclidean distances...', end=' ')
 euclidean = getEuclidean(omegaset, omega)
+print('done!')
 
-print("Paling mirip tuh gambar no ", numpy.argmin(euclidean))
+closestresult = getFileName(datasetfolder, numpy.argmin(euclidean))
+for i in range(len(euclidean)):
+    print(i, euclidean[i])
+print('minimum distance index: ',numpy.argmin(euclidean))
+print('closest result for',testfacefile, ':',closestresult)
+
