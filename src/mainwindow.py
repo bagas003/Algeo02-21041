@@ -1,36 +1,46 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
-from PIL import ImageTk, Image
 from tkinter import filedialog
+from tkinter import messagebox
+from PIL import ImageTk, Image
 import os
 
 def start():
-    print("Button Clicked")
+    if disphoto != '' and folderonly != '' :
+        print("Button Clicked")
+    else :
+        messagebox.showerror("Error","Anda belum memilih folder dan file nya!")
 
 #=================================================================#
 def cfile():
         global disphoto
+        disphoto = ''
 
         filename = filedialog.askopenfilename()
         head, tail = os.path.split(filename)
-        canvas.itemconfig(NoFilC, text = tail)
+        #print(tail, "aisjdiasijdiajs")
+        if tail != '' :
+            canvas.itemconfig(NoFilC, text = tail)
 
-        # Load image
-        imeg = Image.open(filename)
-        resized = imeg.resize((256,256), Image.ANTIALIAS)
-        new = ImageTk.PhotoImage(resized)
-        
-        disphoto = canvas.create_image(541,387,image=new)
-        disphoto.tkraise()
+            # Load image
+            imeg = Image.open(filename)
+            resized = imeg.resize((256,256), Image.ANTIALIAS)
+            new = ImageTk.PhotoImage(resized)
+            
+            disphoto = canvas.create_image(541,387,image=new)
+            disphoto.tkraise()
 #=================================================================#
 def cfolder():
         global folderdirac, folderonly
+        folderonly = ''
+
 
         root = Tk()
         root.withdraw()
         folderdirac = filedialog.askdirectory() 
         folderonly = os.path.basename(folderdirac)
-        canvas.itemconfig(NoFolC ,text = folderonly)
+        if folderonly != '' :
+            canvas.itemconfig(NoFolC ,text = folderonly)
 
         # Load image in folder
         '''array_image.clear()
@@ -47,6 +57,10 @@ window.geometry("1280x720")
 window.configure(bg = "#FFFFFF")
 window.title("Face Recognition")
 window.resizable(False, False)
+
+# Sementara
+folderonly = ''
+disphoto = ''
 
 canvas = Canvas(
     window,
@@ -99,17 +113,17 @@ b2.place(
     width = 204,
     height = 64)
 
-NoFolC = canvas.create_text(90,242,
+NoFolC = canvas.create_text(155,247,
                             text="No Folder Chosen",
                             fill="#FFFFFF",
                             justify="left",
-                            anchor="w",
+                            anchor="center",
                             font=("Poppins", 12, "bold"))
-NoFilC = canvas.create_text(100,523,
+NoFilC = canvas.create_text(156,525,
                             text="No File Chosen",
                             fill="#FFFFFF",
                             justify="left",
-                            anchor="w",
+                            anchor="center",
                             font=("Poppins", 12, "bold"))
 
 window.mainloop()
