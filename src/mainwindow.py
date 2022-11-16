@@ -4,7 +4,7 @@ from PIL import ImageTk, Image
 from tkinter import filedialog
 import os
 
-def ressemen():
+def start():
     print("Button Clicked")
 
 #=================================================================#
@@ -24,11 +24,13 @@ def cfile():
         disphoto.tkraise()
 #=================================================================#
 def cfolder():
+        global folderdirac, folderonly
+
         root = Tk()
         root.withdraw()
-        folder = filedialog.askdirectory() 
-        folder_only = os.path.basename(folder)
-        canvas.itemconfig(NoFolC ,text = folder_only)
+        folderdirac = filedialog.askdirectory() 
+        folderonly = os.path.basename(folderdirac)
+        canvas.itemconfig(NoFolC ,text = folderonly)
 
         # Load image in folder
         '''array_image.clear()
@@ -66,7 +68,7 @@ b0 = Button(
     image = img0,
     borderwidth = 0,
     highlightthickness = 0,
-    command = ressemen,
+    command = start,
     relief = "flat")
 b0.place(
     x = 15, y = 592,
