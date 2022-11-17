@@ -62,21 +62,53 @@ def getFileName(foldername, index):
 #             threshold = max(threshold, numpy.linalg.norm(omegaset[i] - omegaset[j]))
 #     return threshold / 2
 
-datasetfolder = input('enter dataset folder: (ex. newdataset)\n>> ')
-testfacefile = input('enter testface file: (ex. test.jpg)\n>> ')
+def runprogram(foldername, filename): #keduanya dirac full 
+    start = time.time()
 
-start = time.time()
+    dataset = getDataset(foldername) 
+    mean = numpy.mean(dataset, axis=0) 
+    subtracted = dataset - mean 
+    
+    covarian = getCovarian(subtracted)
+    evalues, evectors = numpy.linalg.eigh(covarian)
+    
+    efaces = getEigenfaces(subtracted, evectors) 
+    omegaset = getOmegaSet(efaces, subtracted) 
 
-datasetfolder = r'..\test\\' + datasetfolder
-dataset = getDataset(datasetfolder)
-mean = numpy.mean(dataset, axis=0)
-subtracted = dataset - mean
+    testface = cv2.imread(filename, cv2.IMREAD_GRAYSCALE) 
+    testface = cv2.resize(testface, (256, 256)) 
+    testface = numpy.array(testface.T).flatten()
+    subtracted_test = testface - mean
+
+    omega = getOmega(efaces, subtracted_test)
+    ed, index = getEuclideanAndIndex(omegaset, omega)
+
+    closestresult = getFileName(foldername, index) # nama file hasil similarity
+
+    timetaken = time.time() - start
+
+    #===== sementara =====#
+    # print('\nclosest result for',foldername, ':',closestresult)
+    # print('time taken: ', timetaken) 
+
+    return closestresult, timetaken
+
+'''
+#datasetfolder = input('enter dataset folder: (ex. newdataset)\n>> ')
+#testfacefile = input('enter testface file: (ex. test.jpg)\n>> ')
+
+# start = time.time() ini nanti dipindahin ke start button
+
+#datasetfolder = r'..\test\\' + datasetfolder diganti sama folderdirec dari cfolder
+dataset = getDataset(datasetfolder) # jadi matriks dari semua foto yang ada di dataset
+mean = numpy.mean(dataset, axis=0) 
+subtracted = dataset - mean 
 
 covarian = getCovarian(subtracted)
-evalues, evectors = numpy.linalg.eigh(covarian)
+evalues, evectors = numpy.linalg.eigh(covarian) # ini punya si farhan
 
-efaces = getEigenfaces(subtracted, evectors)
-omegaset = getOmegaSet(efaces, subtracted)
+efaces = getEigenfaces(subtracted, evectors) 
+omegaset = getOmegaSet(efaces, subtracted) 
 
 testface = cv2.imread(r'..\test\testface_folder\\' + testfacefile, cv2.IMREAD_GRAYSCALE)
 testface = cv2.resize(testface, (256, 256))
@@ -89,9 +121,9 @@ ed, index = getEuclideanAndIndex(omegaset, omega)
 # treshold = getThreshold(omegaset)
 
 closestresult = getFileName(datasetfolder, index)
-print('\nclosest result for',testfacefile, ':',closestresult)
+# print('\nclosest result for',testfacefile, ':',closestresult)
 
-print('time taken: ', time.time() - start)
+# print('time taken: ', time.time() - start) nanti ditaro di ex time 
 
-writeImage(dataset[index], '../test/result.jpg')
-writeImage(testface, '../test/testface.jpg')
+# writeImage(dataset[index], '../test/result.jpg')
+# writeImage(testface, '../test/testface.jpg')'''

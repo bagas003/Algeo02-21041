@@ -3,17 +3,21 @@ from tkinter.filedialog import askopenfilename
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import ImageTk, Image
+from main import *
 import os
 
 def start():
     if disphoto != '' and folderonly != '' :
         print("Button Clicked")
+        closestres, exetime = runprogram(folderdirac, filename)
     else :
         messagebox.showerror("Error","Anda belum memilih folder dan file nya!")
 
 #=================================================================#
 def cfile():
         global disphoto
+        global filename
+        filename = ''
         disphoto = ''
 
         filename = filedialog.askopenfilename()
@@ -30,14 +34,15 @@ def cfile():
             disphoto = canvas.create_image(541,387,image=new)
             disphoto.tkraise()
 #=================================================================#
-def cfolder():
+def cfolder(): #adaprngeloop terus
         global folderdirac, folderonly
         folderonly = ''
-
+        folderdirac = ''
 
         root = Tk()
         root.withdraw()
         folderdirac = filedialog.askdirectory() 
+        print(folderdirac)
         folderonly = os.path.basename(folderdirac)
         if folderonly != '' :
             canvas.itemconfig(NoFolC ,text = folderonly)
