@@ -10,6 +10,20 @@ def start():
     if disphoto != '' and folderonly != '' :
         print("Button Clicked")
         closestres, exetime = runprogram(folderdirac, filename)
+        discr = folderdirac + '/' + closestres
+        if len(closestres) > 18 :
+            closestres = closestres[:18]
+        
+        canvas.itemconfig(distimeex ,text = str(round(exetime,6)) + 's')
+        canvas.itemconfig(fcresult ,text = closestres)
+
+        # print(discr)
+        imeg2 = Image.open(discr)
+        resized2 = imeg2.resize((256,256), Image.ANTIALIAS)
+        photocr2 = ImageTk.PhotoImage(resized2)
+        disphoto2 = canvas.create_image(915,387, image=photocr2)
+        disphoto2.tkraise() # masih masalah disini
+
     else :
         messagebox.showerror("Error","Anda belum memilih folder dan file nya!")
 
@@ -129,6 +143,20 @@ NoFilC = canvas.create_text(156,525,
                             fill="#FFFFFF",
                             justify="left",
                             anchor="center",
+                            font=("Poppins", 12, "bold"))
+
+distimeex = canvas.create_text(572,608, 
+                            text= '0s',
+                            fill="#FFFFFF",
+                            justify="left",
+                            anchor="w",
+                            font=("Poppins", 12, "bold"))
+
+fcresult = canvas.create_text(871,608, 
+                            text= '',
+                            fill="#FFFFFF",
+                            justify="left",
+                            anchor="w",
                             font=("Poppins", 12, "bold"))
 
 window.mainloop()
