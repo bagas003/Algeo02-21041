@@ -15,8 +15,8 @@ def start():
 
         closestres, exetime = runprogram(folderdirac, filename)
         discr = str(folderdirac) + '/' + closestres
-        if len(closestres) > 18 :
-            closestres = closestres[:18]
+        if len(closestres) > 17 :
+            closestres = closestres[:17]
         
         canvas.itemconfig(distimeex ,text = str(round(exetime,6)) + 's')
         canvas.itemconfig(fcresult ,text = closestres)
