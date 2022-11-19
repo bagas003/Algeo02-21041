@@ -40,6 +40,41 @@ def gambar():
     ⠀⠀⠀⣐⣂⣀⣀⠀⣶⣶⣾⢉⣴⢾⣿⣷⣤⣤⣤⣤⣠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⡄⢀⣀⠀⠄⠈⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣦⡀⣀⣀⣀⣀⠀⢀"""
     print(gigachad)
 
+def getEVEV(covarian):  # PAKAI YANG INI DULU
+    n = len(covarian)
+
+    Q = np.random.rand(n, n)
+    Q, R = np.linalg.qr(Q)
+
+    for i in range(1000):
+        QR = np.matmul(covarian,Q)
+        Q, R = np.linalg.qr(QR)
+
+    return np.diag(R), Q
+
+def getEVEV2(covarian):
+    n = len(covarian)
+
+    Q = np.random.rand(n, n)
+    Q, R = np.linalg.qr(Q)
+
+    isConverges = False
+
+    while(not isConverges):
+        QR = np.matmul(covarian,Q)
+        Q, R = np.linalg.qr(QR)
+        isConverges = isConv(QR,R)
+
+    return np.diag(R), Q
+
+def isConv(QR,R):
+    n = len(QR)
+    randomInt = np.random.randint(0,n-1)
+    if ((R[randomInt][randomInt]-QR[randomInt][randomInt])/QR[randomInt][randomInt] < 0.1):
+        return True
+    else:
+        return False
+    
 
 def getEValueEVector(covarian):
     EValue = [0 for i in range(len(covarian))]
@@ -55,7 +90,7 @@ def getEValueEVector(covarian):
 
     return EValue, EVector
 
-def checkUpperTriangular(matrix):
+def isUpperTriangular(matrix):
     i = 1
     j = 0
     isTriangular = True
