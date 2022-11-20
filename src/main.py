@@ -54,13 +54,13 @@ def getEuclideanAndIndex(omegaSet, omegaNew):
 def getFileName(foldername, index):
     return os.listdir(foldername)[index]
 
-# def getThreshold(omegaset):
-#     l = len(omegaset)
-#     threshold = 0
-#     for i in range(l):
-#         for j in range(i, l):
-#             threshold = max(threshold, numpy.linalg.norm(omegaset[i] - omegaset[j]))
-#     return threshold / 2
+def getThreshold(omegaset):
+    l = len(omegaset)
+    threshold = 0
+    for i in range(l):
+        for j in range(i, l):
+            threshold = max(threshold, getDistance(omegaset[i] - omegaset[j]))
+    return threshold / 4
 
 def getDistance(vector):
     ret = 0
@@ -88,14 +88,56 @@ def runprogram(foldername, filename): #keduanya dirac full
     subtracted_test = testface - mean
 
     omega = getOmega(efaces, subtracted_test)
+    # euclidean = getEuclidean(omegaset, omega)
+    # ed = min(euclidean);
+    # threshold = max(euclidean)
+    # index = numpy.argmin(euclidean)
     ed, index = getEuclideanAndIndex(omegaset, omega)
 
     closestresult = getFileName(foldername, index) # nama file hasil similarity
 
+    
+    threshold = getThreshold(omegaset)
+    similarity = (threshold - ed) * 100 / threshold
+    
     timetaken = time.time() - start
-
     #===== sementara =====#
     # print('\nclosest result for',foldername, ':',closestresult)
     # print('time taken: ', timetaken) 
 
-    return closestresult, timetaken
+    return closestresult, timetaken, similarity
+
+'''
+#datasetfolder = input('enter dataset folder: (ex. newdataset)\n>> ')
+#testfacefile = input('enter testface file: (ex. test.jpg)\n>> ')
+
+# start = time.time() ini nanti dipindahin ke start button
+
+#datasetfolder = r'..\test\\' + datasetfolder diganti sama folderdirec dari cfolder
+dataset = getDataset(datasetfolder) # jadi matriks dari semua foto yang ada di dataset
+mean = numpy.mean(dataset, axis=0) 
+subtracted = dataset - mean 
+
+covarian = getCovarian(subtracted)
+evalues, evectors = numpy.linalg.eigh(covarian) # ini punya si farhan
+
+efaces = getEigenfaces(subtracted, evectors) 
+omegaset = getOmegaSet(efaces, subtracted) 
+
+testface = cv2.imread(r'..\test\testface_folder\\' + testfacefile, cv2.IMREAD_GRAYSCALE)
+testface = cv2.resize(testface, (256, 256))
+testface = numpy.array(testface.T).flatten()
+subtracted_test = testface - mean
+
+omega = getOmega(efaces, subtracted_test)
+
+ed, index = getEuclideanAndIndex(omegaset, omega)
+
+
+closestresult = getFileName(datasetfolder, index)
+# print('\nclosest result for',testfacefile, ':',closestresult)
+
+# print('time taken: ', time.time() - start) nanti ditaro di ex time 
+
+# writeImage(dataset[index], '../test/result.jpg')
+# writeImage(testface, '../test/testface.jpg')'''
