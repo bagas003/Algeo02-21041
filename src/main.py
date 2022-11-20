@@ -37,15 +37,15 @@ def getOmegaSet(eigenfaces, subtracted):
 def getEuclidean(omegaSet, omegaNew):
     euclidean = []
     for omega in omegaSet:
-        euclidean += [numpy.linalg.norm(omegaNew - omega)]
+        euclidean += [getDistance(omegaNew - omega)]
     return euclidean
 
 def getEuclideanAndIndex(omegaSet, omegaNew):
-    ed = numpy.linalg.norm(omegaNew - omegaSet[0])
+    ed = getDistance(omegaNew - omegaSet[0])
     idx = 0
     row = len(omegaSet)
     for i in range(1,row):
-        edtemp = numpy.linalg.norm(omegaNew - omegaSet[i])
+        edtemp = getDistance(omegaNew - omegaSet[i])
         if edtemp < ed:
             ed = edtemp
             idx = i
@@ -61,6 +61,13 @@ def getFileName(foldername, index):
 #         for j in range(i, l):
 #             threshold = max(threshold, numpy.linalg.norm(omegaset[i] - omegaset[j]))
 #     return threshold / 2
+
+def getDistance(vector):
+    ret = 0
+    for i in vector:
+        ret += i*i
+    return numpy.sqrt(ret)
+
 
 def runprogram(foldername, filename): #keduanya dirac full 
     start = time.time()
@@ -92,38 +99,3 @@ def runprogram(foldername, filename): #keduanya dirac full
     # print('time taken: ', timetaken) 
 
     return closestresult, timetaken
-
-'''
-#datasetfolder = input('enter dataset folder: (ex. newdataset)\n>> ')
-#testfacefile = input('enter testface file: (ex. test.jpg)\n>> ')
-
-# start = time.time() ini nanti dipindahin ke start button
-
-#datasetfolder = r'..\test\\' + datasetfolder diganti sama folderdirec dari cfolder
-dataset = getDataset(datasetfolder) # jadi matriks dari semua foto yang ada di dataset
-mean = numpy.mean(dataset, axis=0) 
-subtracted = dataset - mean 
-
-covarian = getCovarian(subtracted)
-evalues, evectors = numpy.linalg.eigh(covarian) # ini punya si farhan
-
-efaces = getEigenfaces(subtracted, evectors) 
-omegaset = getOmegaSet(efaces, subtracted) 
-
-testface = cv2.imread(r'..\test\testface_folder\\' + testfacefile, cv2.IMREAD_GRAYSCALE)
-testface = cv2.resize(testface, (256, 256))
-testface = numpy.array(testface.T).flatten()
-subtracted_test = testface - mean
-
-omega = getOmega(efaces, subtracted_test)
-
-ed, index = getEuclideanAndIndex(omegaset, omega)
-# treshold = getThreshold(omegaset)
-
-closestresult = getFileName(datasetfolder, index)
-# print('\nclosest result for',testfacefile, ':',closestresult)
-
-# print('time taken: ', time.time() - start) nanti ditaro di ex time 
-
-# writeImage(dataset[index], '../test/result.jpg')
-# writeImage(testface, '../test/testface.jpg')'''
