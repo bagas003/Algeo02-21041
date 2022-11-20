@@ -13,7 +13,8 @@ def start():
         # print("Button Clicked")
         global disresult, opres
 
-        closestres, exetime = runprogram(folderdirac, filename)
+        closestres, exetime, similari = runprogram(folderdirac, filename)
+        print(similari)
         discr = str(folderdirac) + '/' + closestres
         if len(closestres) > 17 :
             closestres = closestres[:17]
