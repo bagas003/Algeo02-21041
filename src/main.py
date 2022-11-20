@@ -37,15 +37,15 @@ def getOmegaSet(eigenfaces, subtracted):
 def getEuclidean(omegaSet, omegaNew):
     euclidean = []
     for omega in omegaSet:
-        euclidean += [getDistance(omegaNew - omega)]
+        euclidean += [getDistance(omegaNew, omegaNew)]
     return euclidean
 
 def getEuclideanAndIndex(omegaSet, omegaNew):
-    ed = getDistance(omegaNew - omegaSet[0])
+    ed = getDistance(omegaNew, omegaSet[0])
     idx = 0
     row = len(omegaSet)
     for i in range(1,row):
-        edtemp = getDistance(omegaNew - omegaSet[i])
+        edtemp = getDistance(omegaNew, omegaSet[i])
         if edtemp < ed:
             ed = edtemp
             idx = i
@@ -59,14 +59,15 @@ def getThreshold(omegaset):
     threshold = 0
     for i in range(l):
         for j in range(i, l):
-            threshold = max(threshold, getDistance(omegaset[i] - omegaset[j]))
+            threshold = max(threshold, getDistance(omegaset[i], omegaset[j]))
     return threshold / 4
 
-def getDistance(vector):
+def getDistance(vector1, vector2):
     ret = 0
+    vector = numpy.array(vector1 - vector2).flatten()
     for i in vector:
         ret += i*i
-    return numpy.sqrt(ret)
+    return int(numpy.sqrt(ret))
 
 
 def runprogram(foldername, filename): #keduanya dirac full 
