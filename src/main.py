@@ -1,4 +1,5 @@
 import cv2, os, numpy, time
+import eigen
 
 def getDataset(foldername):
     data = []
@@ -78,7 +79,8 @@ def runprogram(foldername, filename): #keduanya dirac full
     subtracted = dataset - mean 
     
     covarian = getCovarian(subtracted)
-    evalues, evectors = numpy.linalg.eigh(covarian)
+    # evalues, evectors = numpy.linalg.eigh(covarian)
+    evectors = eigen.getEVEV(covarian)
     
     efaces = getEigenfaces(subtracted, evectors) 
     omegaset = getOmegaSet(efaces, subtracted) 

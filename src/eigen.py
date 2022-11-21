@@ -46,11 +46,11 @@ def getEVEV(covarian):  # PAKAI YANG INI DULU
     Q = np.random.rand(n, n)
     Q, R = np.linalg.qr(Q)
 
-    for i in range(1000):
+    for i in range(10):
         QR = np.matmul(covarian,Q)
         Q, R = np.linalg.qr(QR)
 
-    return np.diag(R), Q
+    return Q
 
 def getEVEV2(covarian):
     n = len(covarian)
