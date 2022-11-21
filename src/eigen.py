@@ -1,4 +1,4 @@
-import cv2, os, numpy as np
+import numpy as np
 
 def gambar():
     gigachad = """    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -40,71 +40,64 @@ def gambar():
     ⠀⠀⠀⣐⣂⣀⣀⠀⣶⣶⣾⢉⣴⢾⣿⣷⣤⣤⣤⣤⣠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⡄⢀⣀⠀⠄⠈⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣦⡀⣀⣀⣀⣀⠀⢀"""
     print(gigachad)
 
-def getEVEV(covarian):  # PAKAI YANG INI DULU
+def getEVEV(covarian):  # QR Decomp menggunakan library
     n = len(covarian)
 
     Q = np.random.rand(n, n)
     Q, R = np.linalg.qr(Q)
 
-    for i in range(10):
+    for i in range(20):
         QR = np.matmul(covarian,Q)
         Q, R = np.linalg.qr(QR)
 
     return Q
 
-def getEVEV2(covarian):
+def getEVEV2(covarian):  # QR Decomp tanpa library
     n = len(covarian)
 
     Q = np.random.rand(n, n)
-    Q, R = np.linalg.qr(Q)
+    Q, R = QRDecomp(Q)
 
-    isConverges = False
-
-    while(not isConverges):
+    for i in range(20):
         QR = np.matmul(covarian,Q)
-        Q, R = np.linalg.qr(QR)
-        isConverges = isConv(QR,R)
+        Q, R = QRDecomp(QR)
 
-    return np.diag(R), Q
+    return Q
 
-def isConv(QR,R):
-    n = len(QR)
-    randomInt = np.random.randint(0,n-1)
-    if ((R[randomInt][randomInt]-QR[randomInt][randomInt])/QR[randomInt][randomInt] < 0.1):
-        return True
-    else:
-        return False
+def QRDecomp(mat):
+    # Gram-Schmidt
+    n = len(mat)
+    Q = np.zeros((n,n))
+    R = np.zeros((n,n))
     
+    for i in range(n):
+        # kolom i dari mat
+        u = mat[:, i]
 
-def getEValueEVector(covarian):
-    EValue = [0 for i in range(len(covarian))]
-    EVector = [[0 for i in range(len(covarian))] for j in range(len(covarian))]
-    Q = [[0 for i in range(len(covarian))] for j in range(len(covarian))]
-    R = [[0 for i in range(len(covarian))] for j in range(len(covarian))]
-    for i in range(50000):
-        Q, R = np.linalg.qr(covarian)
-        covarian = np.matmul(R,Q)
-    
-    for i in range(len(covarian)):
-        EValue[i]=covarian[i][i]
+        for j in range(i - 1):
+            q = Q[:, j]
+            R[j, i] = np.matmul(q,u)
+            u = u - R[j, i] * q
+        
+        unorm = norm(u)
 
-    return EValue, EVector
+        # ei = ui/norm(ui)
+        Q[:, i] = u / unorm
+        # diagonal
+        R[i, i] = unorm
+    return Q, R
 
-def isUpperTriangular(matrix):
-    i = 1
-    j = 0
-    isTriangular = True
-    while(i<len(matrix) and isTriangular):
-        if (matrix[i][j] >= 0.00001) or (matrix[i][j] <= -0.00001) :
-            isTriangular = False
-        if j+1==i:
-            i+=1
-            j=0
-        else:
-            j+=1
-    return isTriangular
+def norm(u):
+    # norm for 1xn matrix
+    n = len(u)
+    norm = 0
+    for i in range(n):
+        norm += (u[i])**2
+    return (norm)**(1/2)
 
-
-# cov = [[1, 2, 3, 4, 1, 2, 3, 4], [0, 1, 2, 3, 1, 2, 3, 4], [0, 0, 1, 2, 1, 2, 3, 4], [0, 0, 0, 1, 1, 2, 3, 4], [0, 0, 0, 0, 1, 1, 2, 3], [0, 0, 0, 0, 0, 1, 1, 2], [0, 0, 0, 0, 0, 0, 1, 2], [0, 0, 0, 0, 0, 0, 0, 2]]
-# gambar()
-# print(checkUpperTriangular(cov))
+# a = np.random.rand(30, 30)
+# c = getEVEV(a)
+# d = getEVEV2(a)
+# print(c)
+# print("pass")
+# print(d)
