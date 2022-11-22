@@ -1,6 +1,9 @@
 # Algeo02-21041 - HananGaming
-IF2123 Geometry and Linear Algebra 2022/2023 Project 2
-Eigen Values and EigenFace Application for Face Recognition
+Eigen Values and EigenFace Application for Face Recognition 
+> IF2123 Geometry and Linear Algebra 2022/2023 Project 2
+
+## Screenshot
+![alt text]doc/screenshot.png
 
 ## Deskripsi
 Pengenalan wajah (Face Recognition) adalah teknologi biometrik yang bisa dipakai untuk mengidentifikasi wajah seseorang untuk berbagai kepentingan khususnya keamanan. Program pengenalan wajah melibatkan kumpulan citra wajah yang sudah disimpan pada database lalu berdasarkan kumpulan citra wajah tersebut, program dapat mempelajari bentuk wajah lalu mencocokkan antara kumpulan citra wajah yang sudah dipelajari dengan citra yang akan diidentifikasi.
