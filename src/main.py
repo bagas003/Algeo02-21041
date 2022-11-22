@@ -75,6 +75,12 @@ def getThreshold(omegaset):
             threshold = max(threshold, getDistance(omegaset[i], omegaset[j]))
     return threshold / 4
 
+def getDistance(vector1, vector2):
+    ret = 0
+    vector = numpy.array(vector1 - vector2).flatten()
+    for i in vector:
+        ret += i*i
+    return int(numpy.sqrt(ret))
 
 # pemanggilan program utama
 def runprogram(foldername, filename):
