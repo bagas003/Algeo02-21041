@@ -1,4 +1,4 @@
-# Algeo02-21041 - HananGaming
+# Algeo02-21041 - HananGeming
 Eigen Values and EigenFace Application for Face Recognition 
 > IF2123 Geometry and Linear Algebra 2022/2023 Project 2
 
@@ -10,12 +10,12 @@ Pengenalan wajah (Face Recognition) adalah teknologi biometrik yang bisa dipakai
 
 Terdapat berbagai teknik untuk memeriksa citra wajah dari kumpulan citra yang sudah diketahui seperti jarak Euclidean dan cosine similarity, principal component analysis (PCA), serta Eigenface. Pada Tugas ini, akan dibuat sebuah program pengenalan wajah menggunakan Eigenface.
 
-## Anggota Kelompok - HananGaming
+## Anggota Kelompok - HananGeming
 |NIM|Nama|
 |----------|-------------------------|
 | 13521041 | Muhammad Hanan          |
 | 13521081 | Bagas Aryo Seto         |
-| 13521106 | Muhammad Farhan Fahrezy |
+| 13521106 | Mohammad Farhan Fahrezy |
 
 ## Teknologi yang digunakan
 - tkinter
