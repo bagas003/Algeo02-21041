@@ -16,11 +16,15 @@ def start():
         closestres, exetime, similari = runprogram(folderdirac, filename)
         print(similari)
         discr = str(folderdirac) + '/' + closestres
-        if len(closestres) > 17 :
-            closestres = closestres[:17]
-        
-        canvas.itemconfig(distimeex ,text = str(round(exetime,6)) + 's')
-        canvas.itemconfig(fcresult ,text = closestres)
+        if similari >= 50 :
+            if len(closestres) > 17 :
+                closestres = closestres[:17]
+            canvas.itemconfig(distimeex ,text = str(round(exetime,6)) + 's')
+            canvas.itemconfig(fcresult ,text = closestres)
+        else :
+            discr = "./srcimg/NoFoundPic.png"
+            canvas.itemconfig(distimeex ,text = '0s')
+            canvas.itemconfig(fcresult ,text = 'No picture found!')
 
         # print(discr)
         opres = Image.open(discr)
