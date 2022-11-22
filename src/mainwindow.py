@@ -23,7 +23,7 @@ def start():
             canvas.itemconfig(fcresult ,text = closestres)
         else :
             discr = "./srcimg/NoFoundPic.png"
-            canvas.itemconfig(distimeex ,text = '0s')
+            canvas.itemconfig(distimeex ,text = str(round(exetime,6)) + 's')
             canvas.itemconfig(fcresult ,text = 'No picture found!')
 
         # print(discr)
